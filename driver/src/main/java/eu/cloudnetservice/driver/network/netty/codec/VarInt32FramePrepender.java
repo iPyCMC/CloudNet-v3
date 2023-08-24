@@ -18,14 +18,16 @@ package eu.cloudnetservice.driver.network.netty.codec;
 
 import eu.cloudnetservice.driver.network.netty.NettyUtil;
 import io.netty5.buffer.Buffer;
+import io.netty5.channel.ChannelHandlerAdapter;
 import io.netty5.channel.ChannelHandlerContext;
-import io.netty5.handler.codec.MessageToMessageEncoder;
-import java.util.List;
+import io.netty5.util.concurrent.Future;
+import io.netty5.util.concurrent.Promise;
+import io.netty5.util.concurrent.PromiseCombiner;
 import lombok.NonNull;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
-public final class VarInt32FramePrepender extends MessageToMessageEncoder<Buffer> {
+public final class VarInt32FramePrepender extends ChannelHandlerAdapter {
 
   public static final VarInt32FramePrepender INSTANCE = new VarInt32FramePrepender();
 
@@ -33,15 +35,26 @@ public final class VarInt32FramePrepender extends MessageToMessageEncoder<Buffer
    * {@inheritDoc}
    */
   @Override
-  protected void encode(@NonNull ChannelHandlerContext ctx, @NonNull Buffer msg, @NonNull List<Object> out) {
-    // first write the buffer that contains the length of the following buffer
-    var length = msg.readableBytes();
-    var lengthBuffer = ctx.bufferAllocator().allocate(NettyUtil.varIntBytes(length));
-    NettyUtil.writeVarInt(lengthBuffer, length);
+  public @NonNull Future<Void> write(@NonNull ChannelHandlerContext ctx, @NonNull Object msg) {
+    if (msg instanceof Buffer packetDataBuffer) {
+      // first write the buffer that contains the length of the following buffer
+      var length = packetDataBuffer.readableBytes();
+      var lengthBuffer = ctx.bufferAllocator().allocate(NettyUtil.varIntBytes(length));
+      NettyUtil.writeVarInt(lengthBuffer, length);
 
-    // put both the length buffer and then the actual message buffer into the output list
-    out.add(lengthBuffer);
-    out.add(msg.split());
+      // put both the length buffer and then the actual message buffer into the output list
+      var combiner = new PromiseCombiner(ctx.executor());
+      combiner.add(ctx.write(lengthBuffer));
+      combiner.add(ctx.write(msg));
+
+      // finish the combining and merge all steps into one future
+      Promise<Void> promise = ctx.newPromise();
+      combiner.finish(promise);
+      return promise.asFuture();
+    } else {
+      // pass-through - not of intereset
+      return ctx.write(msg);
+    }
   }
 
   /**
