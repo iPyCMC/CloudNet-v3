@@ -19,12 +19,13 @@ package eu.cloudnetservice.driver.network.netty.codec;
 import eu.cloudnetservice.driver.network.netty.NettyUtil;
 import io.netty5.buffer.Buffer;
 import io.netty5.channel.ChannelHandlerContext;
-import io.netty5.handler.codec.MessageToByteEncoder;
+import io.netty5.handler.codec.MessageToMessageEncoder;
+import java.util.List;
 import lombok.NonNull;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
-public final class VarInt32FramePrepender extends MessageToByteEncoder<Buffer> {
+public final class VarInt32FramePrepender extends MessageToMessageEncoder<Buffer> {
 
   public static final VarInt32FramePrepender INSTANCE = new VarInt32FramePrepender();
 
@@ -32,18 +33,15 @@ public final class VarInt32FramePrepender extends MessageToByteEncoder<Buffer> {
    * {@inheritDoc}
    */
   @Override
-  protected Buffer allocateBuffer(@NonNull ChannelHandlerContext ctx, @NonNull Buffer msg) {
-    var bufferSize = NettyUtil.varIntBytes(msg.readableBytes()) + msg.readableBytes();
-    return ctx.bufferAllocator().allocate(bufferSize);
-  }
+  protected void encode(@NonNull ChannelHandlerContext ctx, @NonNull Buffer msg, @NonNull List<Object> out) {
+    // first write the buffer that contains the length of the following buffer
+    var length = msg.readableBytes();
+    var lengthBuffer = ctx.bufferAllocator().allocate(NettyUtil.varIntBytes(length));
+    NettyUtil.writeVarInt(lengthBuffer, length);
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void encode(@NonNull ChannelHandlerContext ctx, @NonNull Buffer msg, @NonNull Buffer out) {
-    NettyUtil.writeVarInt(out, msg.readableBytes());
-    out.writeBytes(msg);
+    // put both the length buffer and then the actual message buffer into the output list
+    out.add(lengthBuffer);
+    out.add(msg.split());
   }
 
   /**
