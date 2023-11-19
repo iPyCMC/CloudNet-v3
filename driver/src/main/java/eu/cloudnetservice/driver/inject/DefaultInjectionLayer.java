@@ -17,11 +17,11 @@
 package eu.cloudnetservice.driver.inject;
 
 import dev.derklaro.aerogel.Element;
-import dev.derklaro.aerogel.InjectionContext;
 import dev.derklaro.aerogel.Injector;
 import dev.derklaro.aerogel.SpecifiedInjector;
 import dev.derklaro.aerogel.auto.runtime.AutoAnnotationRegistry;
 import dev.derklaro.aerogel.binding.BindingConstructor;
+import dev.derklaro.aerogel.context.InjectionContext;
 import dev.derklaro.aerogel.internal.context.util.ContextInstanceResolveHelper;
 import java.util.function.Consumer;
 import lombok.NonNull;
@@ -84,7 +84,8 @@ record DefaultInjectionLayer<I extends Injector>(
     builder.accept(contextBuilder);
 
     // resolve the instance
-    return (T) ContextInstanceResolveHelper.resolveInstanceAndRemoveContext(contextBuilder.build());
+    var scope = contextBuilder.enterScope();
+    return (T) ContextInstanceResolveHelper.resolveInstanceScoped(scope);
   }
 
   /**

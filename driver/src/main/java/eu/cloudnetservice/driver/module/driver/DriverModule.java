@@ -17,7 +17,7 @@
 package eu.cloudnetservice.driver.module.driver;
 
 import dev.derklaro.aerogel.Element;
-import dev.derklaro.aerogel.InjectionContext;
+import dev.derklaro.aerogel.context.InjectionContext;
 import dev.derklaro.aerogel.util.Qualifiers;
 import eu.cloudnetservice.driver.document.Document;
 import eu.cloudnetservice.driver.document.DocumentFactory;
