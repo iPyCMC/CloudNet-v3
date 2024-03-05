@@ -21,7 +21,6 @@ import static eu.cloudnetservice.ext.platforminject.runtime.util.BindingUtil.fix
 
 import cn.nukkit.Server;
 import cn.nukkit.command.CommandMap;
-import cn.nukkit.inventory.CraftingManager;
 import cn.nukkit.plugin.Plugin;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.plugin.PluginManager;
@@ -49,7 +48,7 @@ public final class NukkitPlatformPluginManager extends BasePlatformPluginManager
       layer.install(createFixedBinding(platformData.getServer().getScheduler(), ServerScheduler.class));
       layer.install(createFixedBinding(platformData.getServer().getPluginManager(), PluginManager.class));
       layer.install(createFixedBinding(platformData.getServer().getServiceManager(), ServiceManager.class));
-      layer.install(createFixedBinding(platformData.getServer().getCraftingManager(), CraftingManager.class));
+      //layer.install(createFixedBinding(platformData.getServer().getCraftingManager(), CraftingManager.class));
       layer.install(createFixedBinding(platformData.getServer().getResourcePackManager(), ResourcePackManager.class));
 
       // install the bindings which are specific to the plugin

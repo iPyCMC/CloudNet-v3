@@ -30,7 +30,7 @@ import lombok.NonNull;
 @Singleton
 @PlatformPlugin(
   platform = "nukkit",
-  api = "1.0.5",
+  api = "2.0.0",
   name = "CloudNet-Bridge",
   version = "{project.build.version}",
   description = "Bridges service software support between all supported versions for easy CloudNet plugin development",

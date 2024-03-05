@@ -33,6 +33,9 @@ allprojects {
   repositories {
     releasesOnly(mavenCentral())
 
+    //jitpack
+    maven("https://jitpack.io")
+
     // old and new sonatype snapshot repository
     snapshotsOnly(maven("https://oss.sonatype.org/content/repositories/snapshots/"))
     snapshotsOnly(maven("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
