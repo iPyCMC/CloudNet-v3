@@ -17,10 +17,10 @@
 package eu.cloudnetservice.modules.bridge.platform.waterdog;
 
 import dev.waterdog.waterdogpe.ProxyServer;
+import dev.waterdog.waterdogpe.network.connection.handler.IForcedHostHandler;
+import dev.waterdog.waterdogpe.network.connection.handler.IReconnectHandler;
 import dev.waterdog.waterdogpe.network.serverinfo.ServerInfo;
 import dev.waterdog.waterdogpe.player.ProxiedPlayer;
-import dev.waterdog.waterdogpe.utils.types.IForcedHostHandler;
-import dev.waterdog.waterdogpe.utils.types.IReconnectHandler;
 import eu.cloudnetservice.modules.bridge.platform.PlatformBridgeManagement;
 import java.util.Locale;
 import lombok.NonNull;

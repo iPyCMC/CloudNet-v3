@@ -30,7 +30,7 @@ public abstract class DefaultUpdaterRegistry<T, C> implements UpdaterRegistry<T,
   public void runUpdater(@NonNull C context, boolean onlyRequiredUpdates) throws Exception {
     var updaterContext = this.provideContext(context);
     for (var updater : this.updaters) {
-      updater.executeUpdates(updaterContext, onlyRequiredUpdates);
+      //updater.executeUpdates(updaterContext, onlyRequiredUpdates);
     }
   }
 

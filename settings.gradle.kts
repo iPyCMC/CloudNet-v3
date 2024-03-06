@@ -50,21 +50,8 @@ initializeSubProjects("plugins", "chat", "simplenametags", "papi-expansion")
 // modules
 initializeSubProjects("modules",
   "bridge",
-  "report",
-  "cloudflare",
-  "rest",
-  "database-mongodb",
-  "database-mysql",
-  "cloudperms",
-  "signs",
-  "storage-sftp",
   "syncproxy",
-  "smart",
-  "labymod",
-  "npcs",
-  "storage-s3",
-  "dockerized-services",
-  "influx")
+  "smart")
 // launcher
 initializeSubProjects("launcher", "java8", "java17", "patcher")
 

@@ -23,7 +23,7 @@ plugins {
   alias(libs.plugins.fabricLoom) apply false
 }
 
-defaultTasks("build", "test", "shadowJar")
+defaultTasks("build", "shadowJar")
 
 allprojects {
   version = Versions.cloudNet
